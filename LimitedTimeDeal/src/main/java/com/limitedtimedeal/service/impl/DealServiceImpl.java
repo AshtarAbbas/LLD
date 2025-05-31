@@ -15,8 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class DealServiceImpl implements DealService {
@@ -42,12 +44,10 @@ public class DealServiceImpl implements DealService {
     }
 
 
-
-
     @Transactional
-    public void deactivateItem(Long dealId){
+    public void deactivateItem(Long dealId) {
         Deal deal = dealRepository.findById(dealId)
-                .orElseThrow(()-> new DealNotFoundException(dealId, "Deal"));
+                .orElseThrow(() -> new DealNotFoundException(dealId, "Deal"));
         deal.setValid(false);
         dealRepository.save(deal);
     }
@@ -68,51 +68,21 @@ public class DealServiceImpl implements DealService {
         return productRepository.save(product);
     }
 
-//    @Override
-//    @Transactional
-//    public Product buy(Long userId, Long dealId) {
-//        Deal deal = dealRepository.findById(dealId)
-//                .orElseThrow(()-> new DealNotFoundException(dealId, "Deal"));
-//        Users user = userRepository.findById(userId)
-//                .orElseThrow(()-> new DealNotFoundException(userId, "User"));
-//        Set<Users> users = deal.getUsers(); // triggers lazy loading
-//        if (!deal.isValid() || users.contains(user)) {
-//            throw new InvalidDealException(user.getUserName(), dealId);
-//        }
-//
-//        // Make state changes
-//
-//        deal.getUsers().add(user);
-//
-//        if (deal.getDiscount() == 0) {
-//            deal.setValid(false);
-//        }
-//
-//        // Save changes
-//        dealRepository.save(deal);
-//
-//        // Load product
-//        Product product = productRepository.findById(deal.getProductId())
-//                .orElseThrow(() -> new DealNotFoundException(deal.getProductId(), "Product"));
-//        return product;
-//    }
-
-    @Override
+        @Override
     @Transactional
     public Product buy(Long userId, Long dealId) {
         Deal deal = dealRepository.findById(dealId)
                 .orElseThrow(()-> new DealNotFoundException(dealId, "Deal"));
         Users user = userRepository.findById(userId)
                 .orElseThrow(()-> new DealNotFoundException(userId, "User"));
-
-        Set<Users> users;
-        synchronized (deal.getUsers()) { // Synchronize access to the collection
-            users = deal.getUsers(); // triggers lazy loading
-            if (!deal.isValid() || users.contains(user)) {
-                throw new InvalidDealException(user.getUserName(), dealId);
-            }
-            deal.getUsers().add(user);
+        Set<Users> users = deal.getUsers(); // triggers lazy loading
+        if (!deal.isValid() || users.contains(user)) {
+            throw new InvalidDealException(user.getUserName(), dealId);
         }
+
+        // Make state changes
+
+        deal.getUsers().add(user);
 
         if (deal.getDiscount() == 0) {
             deal.setValid(false);
@@ -126,4 +96,67 @@ public class DealServiceImpl implements DealService {
                 .orElseThrow(() -> new DealNotFoundException(deal.getProductId(), "Product"));
         return product;
     }
+//    @Override
+//    @Transactional
+//    public Product buy(Long userId, Long dealId) {
+//        Deal deal = dealRepository.findById(dealId)
+//                .orElseThrow(() -> new DealNotFoundException(dealId, "Deal"));
+//        Users user = userRepository.findById(userId)
+//                .orElseThrow(() -> new DealNotFoundException(userId, "User "));
+//
+//        // Create a copy of the users set to avoid ConcurrentModificationException
+//        Set<Users> usersCopy = new HashSet<>(deal.getUsers());
+//
+//        synchronized (usersCopy) { // Synchronize on the copy
+//            if (!deal.isValid() || usersCopy.contains(user)) {
+//                throw new InvalidDealException(user.getUserName(), dealId);
+//            }
+//            // Now add the user to the original set
+//            deal.getUsers().add(user);
+//        }
+//
+//        if (deal.getDiscount() == 0) {
+//            deal.setValid(false);
+//        }
+//
+//        // Save changes
+//        dealRepository.save(deal);
+//
+//        // Load product
+//        Product product = productRepository.findById(deal.getProductId())
+//                .orElseThrow(() -> new DealNotFoundException(deal.getProductId(), "Product"));
+//        return product;
+//    }
+//    @Override
+//    @Transactional
+//    public Product buy(Long userId, Long dealId) {
+//        Deal deal = dealRepository.findById(dealId)
+//                .orElseThrow(() -> new DealNotFoundException(dealId, "Deal"));
+//        Users user = userRepository.findById(userId)
+//                .orElseThrow(() -> new DealNotFoundException(userId, "User "));
+//
+//        // Create a copy of the users set to avoid ConcurrentModificationException
+//        Set<Users> usersCopy = Collections.newSetFromMap(new ConcurrentHashMap<>());
+//        usersCopy.addAll(deal.getUsers());
+//
+//
+//            if (!deal.isValid() || usersCopy.contains(user)) {
+//                throw new InvalidDealException(user.getUserName(), dealId);
+//            }
+//            // Now add the user to the original set
+//            deal.getUsers().add(user);
+//
+//
+//        if (deal.getDiscount() == 0) {
+//            deal.setValid(false);
+//        }
+//
+//        // Save changes
+//        dealRepository.save(deal);
+//
+//        // Load product
+//        Product product = productRepository.findById(deal.getProductId())
+//                .orElseThrow(() -> new DealNotFoundException(deal.getProductId(), "Product"));
+//        return product;
+//    }
 }
