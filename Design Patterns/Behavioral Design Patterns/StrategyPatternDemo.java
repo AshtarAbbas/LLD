@@ -1,28 +1,60 @@
+// StrategyPatternDemo.java
+
+/*
+ * Strategy Design Pattern
+ *
+ * Purpose:
+ * - Define a family of algorithms, encapsulate each one, and make them interchangeable.
+ * - Lets the algorithm vary independently from clients that use it.
+ *
+ * Key Components:
+ * 1. Strategy Interface (SortingStrategy): Declares the sorting behavior
+ * 2. Concrete Strategies (BubbleSortStrategy, MergeSortStrategy, QuickSortStrategy): Implement the behavior
+ * 3. Context (SortingContext): Maintains a reference to a Strategy object and delegates sorting to it
+ *
+ * When to Use:
+ * - You need multiple variants of an algorithm (e.g., different sorting methods)
+ * - You want to isolate algorithm implementation from the client
+ * - You want to replace conditional logic (like switch or if-else) with polymorphism
+ *
+ * Pros:
+ * - Eliminates complex conditional statements
+ * - Supports open/closed principle (add new strategies without changing existing code)
+ * - Improves code flexibility and testability
+ *
+ * Cons:
+ * - Client must be aware of the different strategies
+ * - Increases number of classes (one per strategy)
+ */
+
 import java.util.Arrays;
 
 public class StrategyPatternDemo {
 
+    // Client: Main method selects and switches sorting algorithms at runtime
     public static void main(String[] args) {
+        // Initial strategy: Bubble Sort
         SortingContext sortingContext = new SortingContext(new BubbleSortStrategy());
-
         int[] array1 = {5, 2, 9, 1, 5};
-        sortingContext.performSort(array1);
+        sortingContext.performSort(array1);  // Output: Sorted using Bubble Sort
 
+        // Switch to Merge Sort
         sortingContext.setSortingStrategy(new MergeSortStrategy());
         int[] array2 = {8, 3, 7, 4, 2};
-        sortingContext.performSort(array2);
+        sortingContext.performSort(array2);  // Output: Sorted using Merge Sort
 
+        // Switch to Quick Sort
         sortingContext.setSortingStrategy(new QuickSortStrategy());
         int[] array3 = {6, 1, 3, 9, 5};
-        sortingContext.performSort(array3);
+        sortingContext.performSort(array3);  // Output: Sorted using Quick Sort
     }
 
-    // Strategy Interface
+    // 1. Strategy Interface
     interface SortingStrategy {
-        void sort(int[] array);
+        void sort(int[] array);  // Defines sorting behavior
     }
 
-    // Concrete Strategy - Bubble Sort
+    // 2. Concrete Strategy - Bubble Sort
     static class BubbleSortStrategy implements SortingStrategy {
         @Override
         public void sort(int[] array) {
@@ -40,7 +72,7 @@ public class StrategyPatternDemo {
         }
     }
 
-    // Concrete Strategy - Merge Sort
+    // 2. Concrete Strategy - Merge Sort
     static class MergeSortStrategy implements SortingStrategy {
         @Override
         public void sort(int[] array) {
@@ -84,7 +116,7 @@ public class StrategyPatternDemo {
         }
     }
 
-    // Concrete Strategy - Quick Sort
+    // 2. Concrete Strategy - Quick Sort
     static class QuickSortStrategy implements SortingStrategy {
         @Override
         public void sort(int[] array) {
@@ -118,20 +150,21 @@ public class StrategyPatternDemo {
         }
     }
 
-    // Context Class
+    // 3. Context Class
     static class SortingContext {
-        private SortingStrategy sortingStrategy;
+        private SortingStrategy sortingStrategy; // Holds current strategy
 
         public SortingContext(SortingStrategy sortingStrategy) {
             this.sortingStrategy = sortingStrategy;
         }
 
         public void setSortingStrategy(SortingStrategy sortingStrategy) {
-            this.sortingStrategy = sortingStrategy;
+            this.sortingStrategy = sortingStrategy; // Dynamically change strategy
         }
 
         public void performSort(int[] array) {
-            sortingStrategy.sort(array);
+            sortingStrategy.sort(array); // Delegate sorting to strategy
         }
     }
 }
+
