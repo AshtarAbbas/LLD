@@ -1,5 +1,3 @@
-// TemplatePatternDemo.java
-
 /*
  * Template Design Pattern
  *
@@ -11,6 +9,22 @@
  * - Android Activity Lifecycle methods (onCreate, onStart, etc.)
  * - File parsing frameworks
  * - Order processing systems (as shown below)
+ *
+ * Key Components:
+ * 1. AbstractTemplate – defines the algorithm skeleton via the template method `orderProcessing()`
+ * 2. Concrete Subclasses – implement specific steps of the algorithm
+ * 3. Client – invokes the template method without needing to understand inner steps
+ *
+ * Workflow Summary:
+ *
+ * TemplatePatternDemo (main)
+ *   ├── Creates `LocalDelivery` and `InternationalDelivery` instances
+ *   ├── Calls `orderProcessing()` on each
+ *   │     └── Executes steps in defined sequence:
+ *   │           ├── verifyOrder()     → implemented by subclass
+ *   │           ├── assignDeliveryPartner() → subclass-defined
+ *   │           └── trackStatus()     → subclass-defined
+ *   └── Same skeleton used, but different behavior based on subclass
  *
  * When to Use:
  * - You want to avoid code duplication across classes that follow the same process.
@@ -105,3 +119,4 @@ public class TemplatePatternDemo {
         internationalOrder.orderProcessing();
     }
 }
+

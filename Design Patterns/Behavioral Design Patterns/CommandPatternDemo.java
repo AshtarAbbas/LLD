@@ -1,5 +1,3 @@
-// CommandPatternDemo.java
-
 /*
  * Command Design Pattern
  *
@@ -13,6 +11,17 @@
  * 3. Receiver (RiderReceiver) – knows how to perform the operations
  * 4. Invoker (RideInvoker) – triggers command execution
  * 5. Client (main method) – creates commands and assigns them to the invoker
+ *
+ * Workflow Summary:
+ *
+ * Client (main)
+ *    ├── Creates Receiver (RiderReceiver)
+ *    ├── Creates Command objects (CreateRide, CancelRide), passing receiver
+ *    ├── Creates Invoker (RideInvoker)
+ *    ├── Passes command to Invoker via processCommand()
+ *          └── Invoker calls command.execute()
+ *                └── Command calls appropriate method on Receiver
+ *                      └── Receiver performs the actual operation
  *
  * When to Use:
  * - To parameterize objects based on actions (menu, toolbar, etc.)

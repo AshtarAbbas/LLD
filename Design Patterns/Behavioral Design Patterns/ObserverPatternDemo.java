@@ -1,5 +1,3 @@
-// ObserverPatternDemo.java
-
 /*
  * Observer Design Pattern
  *
@@ -10,8 +8,21 @@
  * Key Components:
  * 1. Subject (Observable): Maintains a list of observers and notifies them of changes
  * 2. Observer: Defines an updating interface for objects that should be notified
- * 3. ConcreteSubject: Implements state tracking and notification
- * 4. ConcreteObserver: Implements update behavior
+ * 3. ConcreteSubject (NewsAgency): Implements state tracking and notification logic
+ * 4. ConcreteObserver (NewsChannel): Implements how each observer responds to updates
+ *
+ * Workflow Summary:
+ *
+ * Client (main)
+ *   ├── Creates a NewsAgency (ConcreteSubject)
+ *   ├── Creates multiple NewsChannel instances (ConcreteObservers)
+ *   ├── Registers observers to the NewsAgency
+ *   ├── Calls agency.setNews(), which:
+ *   │     ├── Updates internal state (`latestNews`)
+ *   │     └── Calls notifyObservers(), which:
+ *   │           └── Iterates through observer list and calls update(news) on each
+ *   ├── One observer is removed using removeObserver()
+ *   └── A second call to setNews() notifies only remaining observers
  *
  * When to Use:
  * - When changes to one object require changing others automatically
@@ -111,3 +122,4 @@ public class ObserverPatternDemo {
         }
     }
 }
+

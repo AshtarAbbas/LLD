@@ -1,5 +1,3 @@
-// IteratorPatternDemo.java
-
 /*
  * Iterator Design Pattern
  *
@@ -13,6 +11,17 @@
  * 3. Aggregate Interface (Aggregate<T>) – defines a method to return an iterator
  * 4. Concrete Aggregate (Company) – implements the Aggregate interface and holds a collection
  * 5. Client (main method) – uses the iterator to access collection elements
+ *
+ * Workflow Summary:
+ *
+ * Client (main)
+ *    ├── Creates a List of Employee objects
+ *    ├── Wraps the list inside a Company (ConcreteAggregate)
+ *    ├── Calls company.createIterator() to get an EmployeeIterator
+ *    ├── Uses while loop:
+ *    │     ├── Calls iterator.hasNext()
+ *    │     └── Calls iterator.next() to retrieve each employee
+ *    └── Prints employee details during iteration
  *
  * When to Use:
  * - You want to traverse a complex collection without exposing its internals

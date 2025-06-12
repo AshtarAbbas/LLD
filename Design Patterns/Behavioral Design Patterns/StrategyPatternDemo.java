@@ -1,11 +1,23 @@
-// StrategyPatternDemo.java
-
 /*
  * Strategy Design Pattern
  *
  * Purpose:
  * - Define a family of algorithms, encapsulate each one, and make them interchangeable.
  * - Lets the algorithm vary independently from clients that use it.
+ *
+ * Real-World Analogy:
+ * - Imagine a navigation app (like Google Maps). You can choose a strategy like "fastest route", "shortest distance",
+ *   or "avoid tolls". The app delegates the route calculation to the chosen strategy.
+ *
+ * Workflow Summary:
+ * StrategyPatternDemo (main)
+ *   ├── Creates SortingContext with initial strategy (e.g., BubbleSortStrategy)
+ *   ├── SortingContext delegates sorting task to current strategy via `performSort()`
+ *   │     ├── BubbleSortStrategy handles sorting and prints output
+ *   ├── Strategy switched to MergeSortStrategy via `setSortingStrategy()`
+ *   │     ├── MergeSortStrategy handles sorting
+ *   ├── Strategy switched to QuickSortStrategy
+ *   │     ├── QuickSortStrategy handles sorting
  *
  * Key Components:
  * 1. Strategy Interface (SortingStrategy): Declares the sorting behavior
@@ -26,6 +38,7 @@
  * - Client must be aware of the different strategies
  * - Increases number of classes (one per strategy)
  */
+
 
 import java.util.Arrays;
 

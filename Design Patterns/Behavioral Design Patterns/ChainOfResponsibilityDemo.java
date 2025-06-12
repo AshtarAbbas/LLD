@@ -5,6 +5,24 @@
  * - To avoid coupling the sender of a request to its receiver by giving more than one object a chance to handle the request.
  * - The request is passed along a chain of handlers until one of them handles it.
  *
+ * Real-World Analogy:
+ * - Think of a customer support system:
+ *     Level 1 Support → Level 2 → Level 3
+ *     A simple query is resolved by Level 1. If it’s complex, it’s forwarded to Level 2, and so on.
+ *
+ * Workflow Summary:
+ *
+ * ChainOfResponsibilityDemo (main)
+ *   ├── Creates handlers:
+ *   │     ├── LowLevelHandler (handles level 1)
+ *   │     ├── MidLevelHandler (handles level 2)
+ *   │     └── HighLevelHandler (handles level 3)
+ *   ├── Chain setup: low → mid → high
+ *   ├── Requests sent to first handler (`low`)
+ *   │     ├── If it can handle → processes request
+ *   │     └── Else → forwards to next in chain
+ *   └── If no handler handles the request → "not handled" message printed
+ *
  * When to Use:
  * - When multiple objects can handle a request, and the handler isn’t known in advance.
  * - When you want to decouple sender and receiver.
